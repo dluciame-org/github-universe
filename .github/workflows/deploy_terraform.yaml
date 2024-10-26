@@ -1,0 +1,79 @@
+name: Infra deploy with private runners
+
+on: push
+
+permissions:
+  contents: write
+  secrets: write
+
+jobs:
+  plan:
+    name: Terraform plan
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Terraform Init
+        id: init
+        run: terraform init
+        env:
+          TF_VAR_gh_token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Terraform Validate
+        id: validate
+        run: terraform validate
+
+      - name: Calculate destroy arg
+        id: destroy_arg
+        run: |
+          if [ $DESTROY == "true" ]; then
+            echo "val=-destroy" >> $GITHUB_OUTPUT
+          else
+            echo "val= " >> $GITHUB_OUTPUT
+          fi
+        env:
+          DESTROY: ${{ inputs.destroy }}
+
+      - name: Terraform Plan
+        id: plan
+        run: terraform plan $DESTROY
+        env:
+          TF_VAR_gh_token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload the plan
+        uses: actions/upload-artifact@v4.3.3 # We generate and artifact of the terraform plan and upload it for the next job to use
+        with:
+          name: artifact-${{ github.run_number }}-${{ github.run_attempt }}-tfplan
+          path: ${{ inputs.tf_dir }}/out.tfplan
+
+  apply:
+    name: Terraform apply
+    needs: [plan]
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ${{ inputs.tf_dir }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Terraform Init
+        id: init
+        run: terraform init
+        env:
+          TF_VAR_gh_token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Download the plan
+        uses: actions/download-artifact@v4.2.0 # We download the artifact we uploaded in the previous step
+        with:
+          name: artifact-${{ github.run_number }}-${{ github.run_attempt }}-tfplan
+          path: ${{ inputs.tf_dir }}
+          pattern: artifact-*
+          merge-multiple: true
+
+      - name: Apply the plan
+        id: apply
+        run: terraform apply -auto-approve out.tfplan # Terraform apply using the plan artifact
+        env:
+          TF_VAR_gh_token: ${{ secrets.GITHUB_TOKEN }}
