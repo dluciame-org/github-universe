@@ -1,6 +1,11 @@
+
+locals {
+  numbers = [for i in range(1, 105) : format("%03d", i)]
+}
+
 resource "github_actions_organization_secret" "secrets" {
-  count           = 101
-  secret_name     = "SECRET_${count.index + 1}"
-  plaintext_value = count.index
+  count           = length(local.numbers)
+  secret_name     = "SECRET_${local.numbers[count.index]}"
+  plaintext_value = local.numbers[count.index]
   visibility      = "all"
 }

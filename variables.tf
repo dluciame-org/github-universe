@@ -3,7 +3,3 @@ variable "github_token" {
   type        = string
 }
 
-variable "subscription_id" {
-  description = "Azure subscription ID"
-  type        = string
-}
