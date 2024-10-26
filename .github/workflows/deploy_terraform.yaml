@@ -2,10 +2,6 @@ name: Infra deploy with private runners
 
 on: push
 
-permissions:
-  contents: write
-  secrets: write
-
 jobs:
   plan:
     name: Terraform plan
@@ -18,7 +14,7 @@ jobs:
         id: init
         run: terraform init
         env:
-          TF_VAR_gh_token: ${{ secrets.GITHUB_TOKEN }}
+          TF_VAR_gh_token: ${{ secrets.gh-universe }}
 
       - name: Terraform Validate
         id: validate
@@ -39,7 +35,7 @@ jobs:
         id: plan
         run: terraform plan $DESTROY
         env:
-          TF_VAR_gh_token: ${{ secrets.GITHUB_TOKEN }}
+          TF_VAR_gh_token: ${{ secrets.gh-universe }}
 
       - name: Upload the plan
         uses: actions/upload-artifact@v4.3.3 # We generate and artifact of the terraform plan and upload it for the next job to use
@@ -63,7 +59,7 @@ jobs:
         id: init
         run: terraform init
         env:
-          TF_VAR_gh_token: ${{ secrets.GITHUB_TOKEN }}
+          TF_VAR_gh_token: ${{ secrets.gh-universe }}
       - name: Download the plan
         uses: actions/download-artifact@v4.2.0 # We download the artifact we uploaded in the previous step
         with:
@@ -76,4 +72,4 @@ jobs:
         id: apply
         run: terraform apply -auto-approve out.tfplan # Terraform apply using the plan artifact
         env:
-          TF_VAR_gh_token: ${{ secrets.GITHUB_TOKEN }}
+          TF_VAR_gh_token: ${{ secrets.gh-universe }}
