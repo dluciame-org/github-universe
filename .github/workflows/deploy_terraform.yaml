@@ -10,11 +10,18 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Log in to Azure using OIDC
+        uses: azure/login@v2.1.1
+        with:
+          client-id: ${{ vars.client-id }}
+          tenant-id: ${{ vars.tenant-id }}
+          subscription-id: ${{ vars.SUBSCRIPTION_ID }}
+
       - name: Terraform Init
         id: init
         run: terraform init
         env:
-          TF_VAR_gh_token: ${{ secrets.gh-universe }}
+          TF_VAR_gh_token: ${{ secrets.GH_UNIVERSE }}
 
       - name: Terraform Validate
         id: validate
@@ -35,7 +42,8 @@ jobs:
         id: plan
         run: terraform plan $DESTROY
         env:
-          TF_VAR_gh_token: ${{ secrets.gh-universe }}
+          TF_VAR_gh_token: ${{ secrets.GH_UNIVERSE }}
+          TF_VAR_subscription_id: ${{ vars.subscription-id }}
 
       - name: Upload the plan
         uses: actions/upload-artifact@v4.3.3 # We generate and artifact of the terraform plan and upload it for the next job to use
@@ -59,7 +67,7 @@ jobs:
         id: init
         run: terraform init
         env:
-          TF_VAR_gh_token: ${{ secrets.gh-universe }}
+          TF_VAR_gh_token: ${{ secrets.GH_UNIVERSE }}
       - name: Download the plan
         uses: actions/download-artifact@v4.2.0 # We download the artifact we uploaded in the previous step
         with:
@@ -72,4 +80,4 @@ jobs:
         id: apply
         run: terraform apply -auto-approve out.tfplan # Terraform apply using the plan artifact
         env:
-          TF_VAR_gh_token: ${{ secrets.gh-universe }}
+          TF_VAR_gh_token: ${{ secrets.GH_UNIVERSE }}

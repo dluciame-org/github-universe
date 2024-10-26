@@ -6,7 +6,7 @@ terraform {
     }
   }
   backend "azurerm" {
-    subscription_id      = "c03796fc-db28-4a77-9aac-8b1e41a415c8"
+    subscription_id      = var.subscription_id
     resource_group_name  = "github-universe-demo"
     storage_account_name = "ghuniversetfstate"
     container_name       = "gh-universe-tfstate"
