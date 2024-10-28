@@ -13,9 +13,9 @@ jobs:
       - name: Log in to Azure using OIDC
         uses: azure/login@v2.1.1
         with:
-          client-id: ${{ vars.client-id }}
-          tenant-id: ${{ vars.tenant-id }}
-          subscription-id: ${{ vars.SUBSCRIPTION_ID }}
+          client-id: ${{ secrets.CLIENT_ID }}
+          tenant-id: ${{ secrets.TENANT_ID }}
+          subscription-id: ${{ secrets.SUBSCRIPTION_ID }}
 
       - name: Terraform Init
         id: init
@@ -62,6 +62,13 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
+      - name: Log in to Azure using OIDC
+        uses: azure/login@v2.1.1
+        with:
+          client-id: ${{ secrets.CLIENT_ID }}
+          tenant-id: ${{ secrets.TENANT_ID }}
+          subscription-id: ${{ secrets.SUBSCRIPTION_ID }}
 
       - name: Terraform Init
         id: init
