@@ -14,6 +14,7 @@ env:
   ARM_SUBSCRIPTION_ID: "${{ secrets.SUBSCRIPTION_ID }}"
   ARM_TENANT_ID: "${{ secrets.TENANT_ID }}"
   ARM_USE_OIDC: true
+  TF_VAR_github_token: ${{ secrets.GH_UNIVERSE }}
 
 jobs:
   plan:
@@ -60,8 +61,6 @@ jobs:
       - name: Terraform Plan
         id: plan
         run: terraform plan $DESTROY
-        env:
-          TF_VAR_gh_token: ${{ secrets.GH_UNIVERSE }}
 
       - name: Upload the plan
         uses: actions/upload-artifact@v4.3.3 # We generate and artifact of the terraform plan and upload it for the next job to use
@@ -104,5 +103,3 @@ jobs:
       - name: Apply the plan
         id: apply
         run: terraform apply -auto-approve out.tfplan # Terraform apply using the plan artifact
-        env:
-          TF_VAR_gh_token: ${{ secrets.GH_UNIVERSE }}
