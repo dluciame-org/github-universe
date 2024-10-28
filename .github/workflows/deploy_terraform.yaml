@@ -17,18 +17,18 @@ jobs:
       - name: Log in to Azure using OIDC
         uses: azure/login@v2.1.1
         with:
-          client-id: ${{ secrets.CLIENT_ID }}
-          tenant-id: ${{ secrets.TENANT_ID }}
-          subscription-id: "c03796fc-db28-4a77-9aac-8b1e41a415c8"
+          client-id: ${{ vars.CLIENT_ID }}
+          tenant-id: ${{ vars.TENANT_ID }}
+          subscription-id: ${{ vars.SUBSCRIPTION_ID }}
 
       - name: Terraform Init
         id: init
         run: terraform init
         env:
           TF_VAR_gh_token: ${{ secrets.GH_UNIVERSE }}
-          ARM_CLIENT_ID: ${{ secrets.CLIENT_ID }}
-          ARM_SUBSCRIPTION_ID: ${{ secrets.TENANT_ID }}
-          ARM_TENANT_ID: ${{ secrets.SUBSCRIPTION_ID }}
+          ARM_CLIENT_ID: ${{ vars.CLIENT_ID }}
+          ARM_SUBSCRIPTION_ID: ${{ vars.TENANT_ID }}
+          ARM_TENANT_ID: ${{ vars.SUBSCRIPTION_ID }}
           ARM_USE_OIDC: true # Important if we use OIDC auth
 
       - name: Terraform Validate
