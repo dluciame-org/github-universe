@@ -9,6 +9,7 @@ terraform {
       version = "~>4.0"
     }
   }
+
   backend "azurerm" {
     subscription_id      = "c03796fc-db28-4a77-9aac-8b1e41a415c8"
     resource_group_name  = "github-universe-demo"
