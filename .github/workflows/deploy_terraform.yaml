@@ -90,7 +90,7 @@ jobs:
         run: terraform init
 
       - name: Download the plan
-        uses: actions/download-artifact@v4.2.0 # We download the artifact we uploaded in the previous step
+        uses: actions/download-artifact@v4 # We download the artifact we uploaded in the previous step
         with:
           name: artifact-${{ github.run_number }}-${{ github.run_attempt }}-tfplan
           path: ${{ inputs.tf_dir }}
