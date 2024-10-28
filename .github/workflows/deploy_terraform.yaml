@@ -10,6 +10,7 @@ jobs:
   plan:
     name: Terraform plan
     runs-on: ubuntu-latest
+    environment: demo
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -63,6 +64,7 @@ jobs:
     name: Terraform apply
     needs: [plan]
     runs-on: ubuntu-latest
+    environment: demo
     defaults:
       run:
         working-directory: ${{ inputs.tf_dir }}
