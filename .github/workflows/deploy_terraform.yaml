@@ -78,6 +78,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_wrapper: false
+
       - name: Log in to Azure using OIDC
         uses: azure/login@v2.1.1
         with:
