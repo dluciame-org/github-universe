@@ -13,6 +13,7 @@ env:
   ARM_CLIENT_ID: "${{ secrets.CLIENT_ID }}"
   ARM_SUBSCRIPTION_ID: "${{ secrets.SUBSCRIPTION_ID }}"
   ARM_TENANT_ID: "${{ secrets.TENANT_ID }}"
+  ARM_USE_OIDC: true
 
 jobs:
   plan:
@@ -32,15 +33,14 @@ jobs:
           client-id: ${{ secrets.CLIENT_ID }}
           tenant-id: ${{ secrets.TENANT_ID }}
           subscription-id: ${{ secrets.SUBSCRIPTION_ID }}
+
       - uses: hashicorp/setup-terraform@v3
         with:
           terraform_wrapper: false
 
       - name: Terraform Init
         id: init
-        run: terraform init
-        env:
-          ARM_USE_OIDC: true # Important if we use OIDC auth
+        run: terraform init # Important if we use OIDC auth
 
       - name: Terraform Validate
         id: validate
@@ -62,7 +62,6 @@ jobs:
         run: terraform plan $DESTROY
         env:
           TF_VAR_gh_token: ${{ secrets.GH_UNIVERSE }}
-          TF_VAR_subscription_id: ${{ vars.subscription-id }}
 
       - name: Upload the plan
         uses: actions/upload-artifact@v4.3.3 # We generate and artifact of the terraform plan and upload it for the next job to use
@@ -93,8 +92,6 @@ jobs:
       - name: Terraform Init
         id: init
         run: terraform init
-        env:
-          ARM_USE_OIDC: true # Important if we use OIDC auth
 
       - name: Download the plan
         uses: actions/download-artifact@v4.2.0 # We download the artifact we uploaded in the previous step
