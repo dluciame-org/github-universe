@@ -1,6 +1,6 @@
 
 locals {
-  numbers = [for i in range(1, 105) : format("%03d", i)]
+  numbers = [for i in range(1, 101) : format("%03d", i)]
 }
 
 resource "github_actions_organization_secret" "secrets" {
