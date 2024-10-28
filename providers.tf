@@ -15,6 +15,11 @@ terraform {
   }
 }
 
+provider "azurerm" {
+  subscription_id = "c03796fc-db28-4a77-9aac-8b1e41a415c8"
+  features {}
+}
+
 provider "github" {
   token = var.github_token
   owner = "dluciame-org"
