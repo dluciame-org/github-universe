@@ -13,7 +13,7 @@ resource "github_actions_organization_secret" "secrets" {
 
 resource "github_actions_secret" "repository_secrets" {
   count           = length(local.numbers)
-  repository      = "your-repository-name" # Replace with your repository name
+  repository      = "github-universe" # Replace with your repository name
   secret_name     = "SECRET_${local.numbers[count.index]}"
   plaintext_value = local.numbers[count.index]
 }
