@@ -66,7 +66,7 @@ jobs:
         uses: actions/upload-artifact@v4.3.3 # We generate and artifact of the terraform plan and upload it for the next job to use
         with:
           name: artifact-${{ github.run_number }}-${{ github.run_attempt }}-tfplan
-          path: ${{ inputs.tf_dir }}/out.tfplan
+          path: out.tfplan
 
   apply:
     name: Terraform apply
@@ -93,7 +93,7 @@ jobs:
         uses: actions/download-artifact@v4 # We download the artifact we uploaded in the previous step
         with:
           name: artifact-${{ github.run_number }}-${{ github.run_attempt }}-tfplan
-          path: ${{ inputs.tf_dir }}
+          path: .
           pattern: artifact-*
           merge-multiple: true
 
