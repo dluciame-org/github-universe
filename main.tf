@@ -9,11 +9,3 @@ resource "github_actions_organization_secret" "secrets" {
   plaintext_value = local.numbers[count.index]
   visibility      = "all"
 }
-
-
-resource "github_actions_secret" "repository_secrets" {
-  count           = length(local.numbers)
-  repository      = "github-universe" # Replace with your repository name
-  secret_name     = "SECRET_${local.numbers[count.index]}"
-  plaintext_value = local.numbers[count.index]
-}
