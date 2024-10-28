@@ -3,7 +3,6 @@ name: Infra deploy with private runners
 on: push
 
 permissions:
-permissions:
   id-token: write
   contents: read
 
