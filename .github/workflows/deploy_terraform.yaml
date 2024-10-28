@@ -9,11 +9,19 @@ permissions:
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
 
+env:
+  ARM_CLIENT_ID: "${{ secrets.AZURE_CLIENT_ID }}"
+  ARM_SUBSCRIPTION_ID: "${{ secrets.AZURE_SUBSCRIPTION_ID }}"
+  ARM_TENANT_ID: "${{ secrets.AZURE_TENANT_ID }}"
+
 jobs:
   plan:
     name: Terraform plan
     runs-on: ubuntu-latest
     environment: demo
+    env:
+      #this is needed since we are running terraform with read-only permissions
+      ARM_SKIP_PROVIDER_REGISTRATION: true
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -25,14 +33,13 @@ jobs:
           tenant-id: ${{ secrets.TENANT_ID }}
           subscription-id: ${{ secrets.SUBSCRIPTION_ID }}
       - uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_wrapper: false
 
       - name: Terraform Init
         id: init
         run: terraform init
         env:
-          #   ARM_CLIENT_ID: ${{ secrets.CLIENT_ID }}
-          #   ARM_SUBSCRIPTION_ID: ${{ secrets.TENANT_ID }}
-          #   ARM_TENANT_ID: ${{ secrets.SUBSCRIPTION_ID }}
           ARM_USE_OIDC: true # Important if we use OIDC auth
 
       - name: Terraform Validate
