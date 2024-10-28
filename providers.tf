@@ -4,6 +4,10 @@ terraform {
       source  = "integrations/github"
       version = "~> 6.0"
     }
+    azurerm = {
+      source  = "hashicorp/azurerm"
+      version = "~>4.0"
+    }
   }
   backend "azurerm" {
     subscription_id      = "c03796fc-db28-4a77-9aac-8b1e41a415c8"
