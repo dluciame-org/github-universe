@@ -69,6 +69,8 @@ jobs:
       - name: Terraform Plan
         id: plan
         run: terraform plan $DESTROY --out=out.tfplan
+        env:
+          DESTROY: ${{ steps.destroy_arg.outputs.val }}
 
       - name: Upload the plan
         uses: actions/upload-artifact@v4.3.3 # We generate and artifact of the terraform plan and upload it for the next job to use
