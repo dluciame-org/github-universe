@@ -73,9 +73,6 @@ jobs:
     needs: [plan]
     runs-on: ubuntu-latest
     environment: demo
-    defaults:
-      run:
-        working-directory: ${{ inputs.tf_dir }}
 
     steps:
       - name: Checkout
