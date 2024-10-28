@@ -1,6 +1,14 @@
 name: Infra deploy with private runners
 
-on: push
+on:
+  workflow_dispatch:
+    inputs:
+      destroy:
+        description: "Destroy the infrastructure"
+        required: false
+        default: false
+        type: "boolean"
+  push:
 
 permissions:
   id-token: write
